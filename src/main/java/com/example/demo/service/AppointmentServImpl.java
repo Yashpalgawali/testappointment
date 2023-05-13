@@ -52,9 +52,9 @@ public class AppointmentServImpl implements AppointmentService {
 		try {
 			List<Appointment>  tdlist = appointrepo.getTodaysAppointments(vemail, today);
 			
-			System.err.println("inside todays appoint service \n ");
+			System.err.println("inside todays appoint service \n Result sie is -> "+tdlist.size());
 			
-			tdlist.stream().forEach(r->System.err.println(r));
+			//tdlist.stream().forEach(r->System.err.println(r));
 			
 			return tdlist;
 		}

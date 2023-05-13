@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.models.Appointment;
@@ -16,7 +17,10 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Long> {
 	public List<Appointment> findByVis_email(String vis_email);
 	
 	
-	@Query("SELECT a FROM Appointment a WHERE a.vis_email=?1 AND a.appoint_date=?2")
-	public List<Appointment> getTodaysAppointments(String vis_email,String today);
+	//@Query("SELECT a FROM Appointment a WHERE a.vis_email=:vemail AND a.appoint_date=:today")
+	//@Query("SELECT e from Appointment e where e.vis_email =:vemail and e.appoint_date =:today")
+	
+	@Query(value="SELECT * FROM tbl_appointment a WHERE a.vis_email=:vemail AND a.appoint_date=:today",nativeQuery=true)
+	public List<Appointment> getTodaysAppointments(@Param("vemail") String vis_email,@Param("today") String today);
 	
 }

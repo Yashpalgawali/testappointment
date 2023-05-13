@@ -55,7 +55,7 @@
 	 
 	  alert("URL is "+burl);
 	  
-	// alert("value in session is "+vmail+" Base URL is "+burl+"/getallappointmentsbyemail/crankyash@gmail.com");
+	 alert("value in session is "+vmail+" Base URL is "+burl+"/getallappointmentsbyemail/"+vmail);
 	 
 	 var aparr = "",tapp="";
 		
@@ -65,23 +65,21 @@
 		    url      : burl+"/getallappointmentsbyemail/"+vmail,
 			dataType : "json",
 			success  : function(result) {
-				
 				var sr = 1;
-				
 				for (var i = 0; i < result.length; i++) 
 				{
 					aparr = aparr
-								
 								+ "<tr><td>"+ result[i].status 
 								+ "</td><td>"+ result[i].vis_name
 								+ "</td><td>"+ result[i].vis_purpose
-								+ "</td><td>"+ result[i].apdate
-								+ "</td><td>"+ result[i].datetime
-								+ "</td><td>"+ result[i].vcomp_name
+								+ "</td><td>"+ result[i].vis_comp
+								+ "</td><td>"+ result[i].appoint_date
+								+ "</td><td>"+ result[i].appoint_time
 								+ "</td><td>"+ result[i].vis_email
 								+ "</td><td>"+ result[i].vis_contact
 								+ "</td><td>"+ result[i].employee.emp_name
-								+ "</td><td>"+ result[i].company.comp_name
+								+ "</td><td>"+ result[i].employee.department.company.comp_name
+								
 								+ "</td></tr>";
 				}
 					$(aparr).appendTo('#apbody');
@@ -92,7 +90,6 @@
 						language	: {
 											"zeroRecords": "No Appointments to Show",
 									  },
-									  
 						"fnRowCallback": function(nRow, result, iDisplayIndex, iDisplayIndexFull) {
 				        if (result[0] == "pending") {
 				          	$('td:eq(0)', nRow).css("color" , "#F69828");
@@ -131,7 +128,7 @@
 		$.ajax({
 				async    : true,
 				type     : "GET",
-			    url      : burl+"/gettodaysappointmentsbyemail/"+vmail+"/"+todaydate,
+			    url      : burl+"/gettodaysappointmentsbyemail/"+vmail,
 				dataType : "json",
 				success  : function(result) {
 					
@@ -141,17 +138,18 @@
 					{
 						tapp = tapp
 								
-								+ "<tr><td>"+ result[i].status
-								+ "</td><td>"+ result[i].vis_name
-								+ "</td><td>"+ result[i].vis_purpose
-								+ "</td><td>"+ result[i].apdate
-								+ "</td><td>"+ result[i].datetime
-								+ "</td><td>"+ result[i].vcomp_name
-								+ "</td><td>"+ result[i].vis_email
-								+ "</td><td>"+ result[i].vis_contact
-								+ "</td><td>"+ result[i].employee.emp_name
-								+ "</td><td>"+ result[i].company.comp_name
-								+ "</td></tr>";
+						+ "<tr><td>"+ result[i].status 
+						+ "</td><td>"+ result[i].vis_name
+						+ "</td><td>"+ result[i].vis_purpose
+						+ "</td><td>"+ result[i].vis_comp
+						+ "</td><td>"+ result[i].appoint_date
+						+ "</td><td>"+ result[i].appoint_time
+						+ "</td><td>"+ result[i].vis_email
+						+ "</td><td>"+ result[i].vis_contact
+						+ "</td><td>"+ result[i].employee.emp_name
+						+ "</td><td>"+ result[i].employee.department.company.comp_name
+						
+						+ "</td></tr>";
 					}
 					$(tapp).appendTo('#aptodaybody');
 					$("#aptodaytable").DataTable({
@@ -177,12 +175,9 @@
 	});
 	  
 	$('#rstbtn').click(function(){
-		
 		location.reload();
-		
 	});
 	  
-
 	 $('#datetime').datetimepicker({
            
 		format: 'hh:mm:ss A',
@@ -199,11 +194,7 @@
 					close	: 'fa fa-times'
 			},
 	 });
-	 
-	 
  });
-  
-  
   
 </script>
 
@@ -211,10 +202,8 @@
 <body>
 
 <div th:replace="fragments/Header.html :: header">
-	
 </div>
 	
-
 <div class="container" >
 	
  <!-- start: PAGE HEADER -->
@@ -232,7 +221,6 @@
 					<li class="breadcrumb-item active" aria-current="page">
 						View Appointments
 					</li>
-					
 				</ol>
 			</div>
 		</div>
@@ -241,30 +229,29 @@
 	</div>	
 	<div th:if="${reswait}">
 		<h6 th:text="${reswait}" class="alert alert-warning"></h6>
-	</div>	
-	
+	</div>
 	<div th:if="${reserr}">
-		<h6 th:text="${reserr}" class="alert alert-success"></h6>
+		<h6 th:text="${reserr}" class="alert alert-danger"></h6>
 	</div>			
 					
-		<div class="card">
-			<div class="card-header">
-				<h4>View Appointments 
-					<a target="_blank" th:href="@{/bookappointment}" class="btn btn-primary" style="float:right;">Book Appointment</a>
-				</h4>
-			</div>
-	  		
-	  		<input type="hidden" id="vis_email" name="vis_email"  th:value="${vemail}" />
-	  		<input type="hidden" id="burl" name="burl"  th:value="${baseurl}" />
-	  		
-		  	<ul class="nav nav-tabs">
-					<li class="nav-item ">
-					  <a class="nav-link active" href="#todayappoints" data-toggle="tab">Today's Appointments</a>
-					</li>
-					<li class="nav-item">
-					  <a class="nav-link " href="#allappoints" data-toggle="tab">All Appointments</a>
-					</li>
-			</ul>		
+	<div class="card">
+		<div class="card-header">
+			<h4>View Appointments 
+				<a target="_blank" th:href="@{/bookappointment}" class="btn btn-primary" style="float:right;">Book Appointment</a>
+			</h4>
+		</div>
+  		
+  		<input type="hidden" id="vis_email" name="vis_email"  th:value="${vemail}" />
+  		<input type="hidden" id="burl" name="burl"  th:value="${burl}" />
+  		
+	  	<ul class="nav nav-tabs">
+				<li class="nav-item ">
+				  <a class="nav-link active" href="#todayappoints" data-toggle="tab">Today's Appointments</a>
+				</li>
+				<li class="nav-item">
+				  <a class="nav-link " href="#allappoints" data-toggle="tab">All Appointments</a>
+				</li>
+		</ul>		
 	  
 	<div class="tab-content">
 	  
@@ -279,26 +266,21 @@
 						<tr>
 							<th>Appointment Status</th>
 							<th>Visitor's Name</th>
-							
 							<th>Visit Purpose</th>
+							<th>Visitor's Company</th>
 							<th>Appointment Date</th>
 							<th>Time</th>
-							<th>Visitor's Company</th>
 							<th>Visitor's Email</th>
 							<th>Visitor's Contact</th>
 							<th>Personnel Name</th>
 							<th>Personnel Company Name</th>
-								
 						</tr>	
 					</thead>	
-					
 					<tbody id="aptodaybody">
 					
 					</tbody>
-					
 				</table>
 			</div>
-		 
     	</div>
       </div>
       
@@ -314,34 +296,26 @@
 							<th>Appointment Status</th>
 							<th>Visitor's Name</th>
 							<th>Visit Purpose</th>
+							<th>Visitor's Company</th>
 							<th>Appointment Date</th>
 							<th>Time</th>
-							
 							<th>Visitor's Email</th>
 							<th>Visitor's Contact</th>
 							<th>Personnel Name</th>
 							<th>Personnel Company Name</th>
-								
 						</tr>	
 					</thead>	
-					
 					<tbody id="apbody">
-
 					</tbody>
 					
 				</table>
 			</div>
-		 
-    	</div>
+		</div>
       </div>
-    	
     </div>
   </div>
-	 
- </div>
+</div>
   
- 
- 
  <!-- Footer -->
 <footer class="container-fluid page-footer font-small blue">
 

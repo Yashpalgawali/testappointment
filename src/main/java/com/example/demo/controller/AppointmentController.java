@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.models.Appointment;
 import com.example.demo.service.AppointmentService;
@@ -100,31 +101,34 @@ public class AppointmentController {
 	public List<Appointment> getAllAppointmentsByVisEmail( @PathVariable("vemail")String vemail)
 	{
 		 return appointserv.getAppointmentsByVisEmail(vemail);
-		
 	}
 	
 	
-	@RequestMapping("/getalltodaysappointmentsbyemail/{vemail}")
+	@RequestMapping("/gettodaysappointmentsbyemail/{vemail}")
 	@ResponseBody
 	public List<Appointment> getTodaysAppointmentsByVisEmail( @PathVariable("vemail")String vemail)
 	{
 		LocalDate tday = LocalDate.now();
-		
 		String today = String.valueOf(tday);
-		
 		System.err.println("Todays date is ->> "+today);
 		
-		return appointserv.getAllTodaysAppointmentsByVisEmail(vemail, today);
+		List<Appointment> tlist = appointserv.getAllTodaysAppointmentsByVisEmail(vemail, today);
 		
+		return tlist;
 	}
 	
-//	@PostMapping("/searchappointbyemail")
-//	public String searchAppointmentByEmail(@ModelAttribute("Appointment")Appointment appoint,Model model,RedirectAttributes attr)
-//	{
+	@RequestMapping("/searchappointbyemail")
+	public String searchAppointmentByEmail(@ModelAttribute("Appointment")Appointment appoint,Model model,RedirectAttributes attr)
+	{
+		String baseurl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+		
+		model.addAttribute("vemail", appoint.getVis_email());
+		model.addAttribute("burl", baseurl);
+		
+		return "ViewAppointmentsByEmail";
+		
 //		List<Appointment> aplist =appointserv.getAppointmentsByVisEmail(appoint.getVis_email());
-//		
 //		aplist.stream().forEach(e->System.err.println(e));
-//		
 //		if(aplist.size()>0)
 //		{
 //			model.addAttribute("aplist", aplist);
@@ -135,5 +139,5 @@ public class AppointmentController {
 //			attr.addFlashAttribute("reserr", "No Appointment found for given Email "+appoint.getVis_email());
 //			return "redirect:/viewallappointments";
 //		}
-//	}
+	}
 }
