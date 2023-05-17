@@ -19,7 +19,6 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Long> {
 	
 	//@Query("SELECT a FROM Appointment a WHERE a.vis_email=:vemail AND a.appoint_date=:today")
 	//@Query("SELECT e from Appointment e where e.vis_email =:vemail and e.appoint_date =:today")
-	
 	@Query(value="SELECT * FROM tbl_appointment a WHERE a.vis_email=:vemail AND a.appoint_date=:today",nativeQuery=true)
 	public List<Appointment> getTodaysAppointments(@Param("vemail") String vis_email,@Param("today") String today);
 	

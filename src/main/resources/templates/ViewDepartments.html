@@ -27,7 +27,11 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
 	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
-	
+	<style>
+	.odd{
+			display:none
+		}
+	</style>
     </head>
  <body>
 
@@ -37,7 +41,6 @@
 	
 
 <div class="container" >
-	
  <!-- start: PAGE HEADER -->
 		<div class="row">
 			<div class="col-sm-12">
@@ -59,64 +62,43 @@
 		</div>
 	
 	<div th:if="${response}">			
-		<h6 th:text="${response}" class="alert alert-success">
-		
-		</h6>
+		<h6 th:text="${response}" class="alert alert-success"></h6>
 	</div>
 	
 	<div th:if="${reserr}">			
-		<h6 th:text="${reserr}" class="alert alert-danger">
-		
-		</h6>
+		<h6 th:text="${reserr}" class="alert alert-danger"></h6>
 	</div>	
 				
   <div class="card">
 			<div class="card-header">
-				<h4>View Department
+				<h4>View Departments
 					<a th:href="@{/adddepartment}" class="btn btn-primary" style="float:right;">Add Department</a>
 				</h4>
 			</div>
-	  
-	 
 	<div class="card-body">
 		<div class="col-md-3"></div>
 		
 		<div class="form-group">
 				<label for="company">Company Name:</label>
 					<select class="form-control" style ="width:100%;" id="company" name="company" required onchange="getdeptbycompid(this.value)">
-						
 						<option selected disabled="disabled"> Select Company Name </option>
 							<th:block th:each="comp : ${clist}">
-								 
 								 <option th:value="${comp.comp_id}" th:text="${comp.comp_name}"></option>
-		                            
-							</th:block>
-							
+		                    </th:block>
 					</select>
 		</div>	
-	    
 	    <table class="table table-bordered table-striped table-hover table-full-width dt-responsive nowrap" style="width:100%;text-decoration:none;" id="depttable">
-					
 			<thead style="background-color:#3fbdeb;color:white;">
-				
 				<tr>
-					
 					<th>Sr No.</th>
 					<th>Department Name</th>
 					<th>Action</th>
-					
 				</tr>
-					
 			</thead>	
-			
 			<tbody id="deptbody">
-			
 			</tbody>
-					
 		</table>
-	
       </div>
-      
     </div>
   </div>
  </body>
@@ -136,6 +118,9 @@
  {
 	 deptarr = "";
 	 
+	 $('#depttable').dataTable().fnClearTable();
+	 
+	 
 	 $.ajax({
 			url		:	'/getdeptbycompid/'+cid,
 			type	:	'GET',
@@ -153,7 +138,6 @@
 				}
 				$(deptarr).appendTo('#deptbody');
 				$('#depttable').DataTable();
-				
 			}
 	 });
  }

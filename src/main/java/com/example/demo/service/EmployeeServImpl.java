@@ -42,4 +42,10 @@ public class EmployeeServImpl implements EmployeeService {
 		emprepo.deleteById(eid);
 	}
 
+	@Override
+	public Employee getempbyemail(String email) {
+		// TODO Auto-generated method stub
+		return emprepo.getEmpByEmailId(email);
+	}
+
 }

@@ -14,6 +14,6 @@ public interface EmployeeService {
 	
 	public void deleteEmployeeByEmpId(String empid);
 
-	
-	
+	public Employee getempbyemail(String email);
+
 }

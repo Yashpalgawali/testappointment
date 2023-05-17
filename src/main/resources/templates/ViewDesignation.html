@@ -73,8 +73,6 @@
 					<a th:href="@{/adddesignation}" class="btn btn-primary" style="float:right;">Add Designation</a>
 				</h4>
 			</div>
-	  
-	 
 		 <div class="card-body">
 			<div class="col-md-3"></div>
 		
@@ -86,7 +84,6 @@
 							<th>Sr No.</th>
 							<th>Designation Name</th>
 							<th>Action</th>
-							
 						</tr>	
 					</thead>	
 					
@@ -94,23 +91,17 @@
 						<th:block th:each=" desig : ${dlist}">
 							<tr>
 								<td th:text="${desig.desig_id}"> </td>
-								<td th:text="${desig.designation}"> </td>
+								<td th:text="${desig.desig_name}"> </td>
 								<td ><a th:href="@{/editdesigbyid/{id}(id=${desig.desig_id})}">Edit</a></td>
 							</tr>
-						
 						</th:block>
 					</tbody>
-					
 				</table>
 			</div>
-		 
     	</div>
       </div>
-      
-    	
     </div>
     <div th:replace="fragments/Footer.html :: footer">
     </div>
-    
     </body>
   

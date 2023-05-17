@@ -53,27 +53,20 @@ $(document).ready(function(){
 	}
 	var today = year+"-"+mnth+"-"+date.getDate();
 	
-	$('#apdate').datetimepicker({ 
-
+	$('#appoint_date').datetimepicker({ 
 		minDate	: 	today,
-		
 		format	:	'YYYY-MM-DD'
-		
-});
+	});
 
-$('#apdate').focusout( function(){ 
+$('#appoint_date').focusout( function(){ 
 
-alert('entered date is '+$('#apdate').val()+' \n and todays date is '+today);
 
-if($('#apdate').val()==today)
+if($('#appoint_date').val()==today)
 {
-  
-   $('#aptime').datetimepicker({ 
+	$('#appoint_time').datetimepicker({ 
       	
 		format: 'hh:mm:ss A',
-		
 		minDate: moment(),
-		 
 		icons: {
 				time	: 'fa fa-clock-o',
 				date	: 'fa fa-calendar',
@@ -85,18 +78,12 @@ if($('#apdate').val()==today)
 				clear	: 'fa fa-trash',
 				close	: 'fa fa-times'
 			},
-				
 	});
-    
 }
 else{
-    
-   
-     $('#aptime').datetimepicker({ 
+	$('#appoint_time').datetimepicker({ 
       	
 		format: 'hh:mm:ss A',
-		
-		
 		icons: {
 				time	: 'fa fa-clock-o',
 				date	: 'fa fa-calendar',
@@ -108,10 +95,9 @@ else{
 				clear	: 'fa fa-trash',
 				close	: 'fa fa-times'
 			},	
-	});
-   }
-  });
-
+		});
+     }
+   });
 });
 
 function getDeptByEmpId(empid)
@@ -140,20 +126,16 @@ function getDeptByEmpId(empid)
 //  function getDeptByCompId(compid)
 //  {
 // 	 var tapp="";
-		
 // 		$.ajax({
 // 				async    : true,
 // 				type     : "GET",
 // 			    url      : "/getdeptbycompid/"+compid,
 // 				dataType : "json",
 // 				success  : function(result) {
-					
 // 					$('select[name="department"]').empty();
 // 					$('select[name="department"]').append('<option selected disabled>Please Select Department</option');
-					
 // 					$('select[name="company"]').empty();
 // 					$('select[name="company"]').append('<option selected disabled>Please Select Company</option');
-					
 // 					$.each(result,function(i){
 // 						$('select[name="department"]').append('<option selected value="'+result[i].dept_id+'">'+result[i].dept_name+'</option>');
 // 						$('select[name="company"]').append('<option selected value="'+result[i].company.comp_id+'">'+result[i].company.comp_name+'</option>');
@@ -218,14 +200,19 @@ function getDeptByEmpId(empid)
 			</div>
 			
 			<div class="form-group">
+				  <label for="vis_address">Visitor's Address</label>
+				  <input type="text" class="form-control" id="vis_address" placeholder="Enter Visitor's Address" name="vis_address" required>
+			</div>
+			
+			<div class="form-group">
 				  <label for="vis_contact">Contact:</label>
 				  <input type="number" class="form-control" id="vis_contact"  placeholder="Enter Visitor's mobile" name="vis_contact" required>
 			</div>
 			
 			<div class="form-group">
-				<label for="apdate">Appointment Date</label>
+				<label for="appoint_date">Appointment Date</label>
 					<div class="input-group">
-						<input class="form-control border-right-0" id="apdate" name="apdate" required>
+						<input class="form-control border-right-0" id="appoint_date" name="appoint_date" required>
 						
 							<span class="input-group-append bg-white border-left-0">
 								<span class="input-group-text bg-transparent">
@@ -237,9 +224,9 @@ function getDeptByEmpId(empid)
 			
 			
 			<div class="form-group">
-				  <label for="aptime">Appointment Time:</label>
+				  <label for="appoint_time">Appointment Time:</label>
 					<div class="input-group">
-					<input class="form-control" type="text" id="aptime"  name="aptime" autocomplete="off"/>
+					<input class="form-control" type="text" id="appoint_time"  name="appoint_time" autocomplete="off"/>
 						
 						<span class="input-group-append bg-white border-left-0">
 								<span class="input-group-text bg-transparent">
@@ -248,7 +235,6 @@ function getDeptByEmpId(empid)
 						</span>
 					</div>
 			</div>
-			
 			
 			<div class="form-group">
 				<label for="employee">Employee Name:</label>

@@ -1,6 +1,8 @@
 package com.example.demo.repository;
 
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +19,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
 	@Transactional
 	@Query(value="UPDATE  Department d SET d.dept_name=?1,d.company=?2 WHERE d.dept_id=?3")
 	public int  updateDepartment(String dname,Long cid,Long did);
+
+	@Query("SELECT d FROM Department d WHERE d.company.comp_id=:compid")
+	public List<Department> getDepartmentbyCompId(Long compid);
 	
 }

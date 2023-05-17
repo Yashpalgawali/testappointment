@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.models.Appointment;
+import com.example.demo.models.Employee;
 import com.example.demo.service.AppointmentService;
 import com.example.demo.service.CompanyService;
 import com.example.demo.service.DepartmentService;
@@ -66,13 +69,15 @@ public class AppointmentController {
 //	}
 	
 	@PostMapping("/saveappointment")
-	public String saveAppointment(@ModelAttribute("Appointment")Appointment appoint,RedirectAttributes attr)
+	public String saveAppointment(@ModelAttribute("Appointment")Appointment appoint,HttpSession sess ,RedirectAttributes attr)
 	{
 		Appointment app = appointserv.saveAppointment(appoint);
 		if(app!=null)
 		{
-			attr.addFlashAttribute("response", "Appointment is booked successfully. Waiting for the confirmations");
-			return "redirect:/viewallappointments";
+			attr.addFlashAttribute("response", "Appointment is booked successfully. Waiting for the confirmation");
+			sess.setAttribute("vemail", appoint.getVis_email());
+		//	return "redirect:/viewallappointments";
+			return "redirect:/viewappointbyvisemail";
 		}
 		else {
 			attr.addFlashAttribute("reserr", "Appointment is not booked ");
@@ -83,8 +88,7 @@ public class AppointmentController {
 	@GetMapping("/viewallappointments")
 	public String viewAllAppointments(Model model)
 	{
-		List<Appointment> aplist =appointserv.getAllAppointments(); 
-		
+		List<Appointment> aplist =appointserv.getAllAppointments();
 		model.addAttribute("aplist", aplist);
 		return "ViewAppointments"; 
 	}
@@ -98,11 +102,10 @@ public class AppointmentController {
 	
 	@RequestMapping("/getallappointmentsbyemail/{vemail}")
 	@ResponseBody
-	public List<Appointment> getAllAppointmentsByVisEmail( @PathVariable("vemail")String vemail)
+	public List<Appointment> getAllAppointmentsByVisEmail(@PathVariable("vemail")String vemail)
 	{
 		 return appointserv.getAppointmentsByVisEmail(vemail);
 	}
-	
 	
 	@RequestMapping("/gettodaysappointmentsbyemail/{vemail}")
 	@ResponseBody
@@ -113,31 +116,38 @@ public class AppointmentController {
 		System.err.println("Todays date is ->> "+today);
 		
 		List<Appointment> tlist = appointserv.getAllTodaysAppointmentsByVisEmail(vemail, today);
-		
 		return tlist;
 	}
 	
 	@RequestMapping("/searchappointbyemail")
-	public String searchAppointmentByEmail(@ModelAttribute("Appointment")Appointment appoint,Model model,RedirectAttributes attr)
+	public String searchAppointmentByEmail(@ModelAttribute("Appointment")Appointment appoint, HttpSession sess ,Model model,RedirectAttributes attr)
+	{ 
+		sess.setAttribute("vemail", appoint.getVis_email());
+		Employee emp = empserv.getempbyemail(appoint.getVis_email());
+		
+		System.err.println("inside emp is ->>"+emp);
+		if(emp!=null)
+		{	
+			attr.addFlashAttribute("vemail", appoint.getVis_email());
+			return "redirect:/viewappointbyvisemail";
+		}
+		else
+		{
+			attr.addFlashAttribute("reserr", "No appointments found for given email");
+			return "redirect:/viewappointbyvisemail";
+		}
+	}
+	
+	@RequestMapping("/viewappointbyvisemail")
+	public String viewAppointmentsByVisitorEmail( HttpSession sess,Model model,RedirectAttributes attr)
 	{
+		String vemail = (String)sess.getAttribute("vemail");
+		
 		String baseurl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 		
-		model.addAttribute("vemail", appoint.getVis_email());
+		model.addAttribute("vemail", vemail);
 		model.addAttribute("burl", baseurl);
 		
 		return "ViewAppointmentsByEmail";
-		
-//		List<Appointment> aplist =appointserv.getAppointmentsByVisEmail(appoint.getVis_email());
-//		aplist.stream().forEach(e->System.err.println(e));
-//		if(aplist.size()>0)
-//		{
-//			model.addAttribute("aplist", aplist);
-//			return "ViewAppointmentsByEmail";
-//		}
-//		else
-//		{
-//			attr.addFlashAttribute("reserr", "No Appointment found for given Email "+appoint.getVis_email());
-//			return "redirect:/viewallappointments";
-//		}
 	}
 }

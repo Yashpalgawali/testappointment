@@ -17,7 +17,6 @@ public class DepartmentServImpl implements DepartmentService {
 	@Override
 	public Department saveDepartment(Department dept) {
 		// TODO Auto-generated method stub
-		
 		return deptrepo.save(dept);
 	}
 
@@ -37,10 +36,15 @@ public class DepartmentServImpl implements DepartmentService {
 	@Override
 	public int updateDepartment(Department dept) {
 		// TODO Auto-generated method stub
-		
-		System.err.println("inside update dept servive \nDept name->> "+dept.getDept_name()+"\nComp_id-->>" +dept.getCompany().getComp_id()+"\n Dept Id->> "+dept.getDept_id());
-		
 		return deptrepo.updateDepartment(dept.getDept_name(), dept.getCompany().getComp_id(), dept.getDept_id());
+	}
+
+	@Override
+	public List<Department> getDepartmentByCompId(String compid) {
+		// TODO Auto-generated method stub
+		
+		Long cid = Long.valueOf(compid);
+		return deptrepo.getDepartmentbyCompId(cid);
 	}
 
 }

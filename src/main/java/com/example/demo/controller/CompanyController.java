@@ -32,7 +32,7 @@ public class CompanyController {
 	{
 		return "AddCompany";
 	}
-	
+	 
 	
 	@PostMapping("/savecompany")
 //	public String saveCompany(@RequestBody Company comp,RedirectAttributes attr)
